@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from coffee_soft.infra import error_handling
+from selenium.webdriver.support.ui import WebDriverWait
+from coffee_soft.utils.users.user_credentials import VALID_USERNAME, VALID_PASSWORD, INVALID_USERNAME, INVALID_PASSWORD
 
 
 class LoginPage:
@@ -22,21 +22,21 @@ class LoginPage:
         except Exception as e:
             print(f"Exception occurred while clicking the Login tab: {e}")
 
-    def set_username(self):
+    def set_username(self, username):
         try:
             user_field = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located(self.USER_FIELD)
             )
-            user_field.send_keys("Chris")
+            user_field.send_keys(username)
         except Exception as e:
             print(f"Exception occurred while setting the username: {e}")
 
-    def set_password(self):
+    def set_password(self, password):
         try:
             password_field = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located(self.PASSWORD_FIELD)
             )
-            password_field.send_keys("Smile2008@")
+            password_field.send_keys(password)
         except Exception as e:
             print(f"Password field is not clickable: {e}")
 
@@ -48,3 +48,27 @@ class LoginPage:
             submit_button.click()
         except Exception as e:
             print(f"Password field is not clickable: {e}")
+
+    def user_login(self, username, password):
+        LoginPage.click_on_login(self)
+        LoginPage.set_username(self, username)
+        LoginPage.set_password(self, password)
+        LoginPage.submit(self)
+
+    def valid_user_login(self):
+        LoginPage.user_login(self, VALID_USERNAME, VALID_PASSWORD)
+
+    def invalid_user_credentials(self):
+        LoginPage.user_login(self, INVALID_USERNAME, INVALID_PASSWORD)
+
+        try:
+
+            error_message = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//li[contains(text(),'Please enter a correct username and password. Note')]"))
+            )
+
+            print(f"Invalid credentials!!!!!")
+            print(error_message.text)
+        except Exception as e:
+            print(f"Error: {e}")

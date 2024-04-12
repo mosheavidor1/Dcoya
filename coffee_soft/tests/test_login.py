@@ -11,13 +11,16 @@ class TestLogin:
         driver.get("https://www.coffe-soft.com")
         yield driver
 
-    def test_login_tab(self, driver):
+    @pytest.mark.order(1)
+    def test_login(self, driver):
         login_page = LoginPage(driver)
-        login_page.click_on_login()
-        login_page.set_username()
-        login_page.set_password()
-        login_page.submit()
+        login_page.valid_user_login()
+
+    @pytest.mark.order(2)
+    def test_negative_login(self, driver):
+        login_page = LoginPage(driver)
+        login_page.invalid_user_credentials()
 
 
 if __name__ == '__main__':
-    pytest.main(['-v', 'tests/'])
+    pytest.main(['-v', '--strict-markers', 'tests/'])
