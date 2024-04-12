@@ -11,9 +11,12 @@ class TestLogin:
         driver.get("https://www.coffe-soft.com")
         yield driver
 
-    def test_login_button(self, driver):
+    def test_login_tab(self, driver):
         login_page = LoginPage(driver)
         login_page.click_on_login()
+        login_page.set_username()
+        login_page.set_password()
+        login_page.submit()
 
 
 if __name__ == '__main__':
