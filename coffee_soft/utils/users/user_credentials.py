@@ -3,3 +3,7 @@ VALID_PASSWORD = "Smile2008@"
 
 INVALID_USERNAME = "abc"
 INVALID_PASSWORD = "Smile2008@"
+
+NEW_USER = "Jack"
+NEW_PASSWORD = "Sm22240@"
+EMAIL = "abc@hotmail.com"
