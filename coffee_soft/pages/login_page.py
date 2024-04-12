@@ -1,35 +1,18 @@
 from selenium.webdriver.common.by import By
-from coffee_soft.pages import base_page
-from coffee_soft.pages.base_page import BasePage
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
-class LoginPage(BasePage):
-    # Locators
-    _username_field = (By.ID, "username")
-    _password_field = (By.ID, "password")
-    _login_button = (By.CSS_SELECTOR, "button[type='submit']")
-    _login_error_message = (By.CSS_SELECTOR, ".error-message")
+class LoginPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.REGISTER_BUTTON = (By.XPATH, "//a[normalize-space()='Register']//*[name()='svg']")
 
-    def navigate_to_login_page(self):
-        self.driver.get("https://www.coffe-soft.com/blog/post/61/")
-
-    def enter_username(self, username):
-        self.find_element(*self._username_field).send_keys(username)
-
-    def enter_password(self, password):
-        self.find_element(*self._password_field).send_keys(password)
-
-    def click_login_button(self):
-        self.find_element(*self._login_button).click()
-
-    def is_logged_in(self):
-        # Implement logic to check if the user is logged in, e.g., by checking for the presence of a logout button
-        # or the absence of the login form
-        return False
-
-    def is_login_error_displayed(self):
+    def click_on_register(self):
         try:
-            self.find_element(*self._login_error_message)
-            return True
-        except:
-            return False
+            register_button = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(self.REGISTER_BUTTON)
+            )
+            register_button.click()
+        except Exception:
+            print("Button is not clickable")
