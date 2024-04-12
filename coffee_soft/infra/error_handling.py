@@ -1,6 +1,10 @@
-class error_handling:
-    def __init__(self):
-        self.error_message = None
+class ErrorHandling:
+    @staticmethod
+    def handle_exception(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                print(f"Exception occurred: {e}")
 
-    def get_error_message(self, error_message):
-        self.error_message = error_message
+        return wrapper
