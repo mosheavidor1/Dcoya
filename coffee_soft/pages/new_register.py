@@ -1,43 +1,102 @@
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.common.exceptions import TimeoutException
+from typing import Optional
 
-from coffee_soft.utils.users.user_credentials import NEW_USER,NEW_PASSWORD,EMAIL
 
-class NewRegister:
-
-    def __init__(self, driver):
+class NewRegisterPage:
+    def __init__(self, driver: WebDriver, timeout: Optional[int] = 10):
         self.driver = driver
-
-        self.first_name_input = "//input[@id='id_username']"
-        self.email_input = "//input[@id='id_email']"
-        self.password_input = "//input[@id='id_password1']"
-        self.password_input_conf = "//input[@id='id_password2']"
-        self.register_button = "//button[normalize-space()='Sign Up!']"
-        self.register_tab = "//a[normalize-space()='Register']"
+        self.timeout = timeout
+        self.firstNameInput = (By.XPATH, "//input[@id='id_username']")
+        self.emailInput = (By.XPATH, "//input[@id='id_email']")
+        self.passwordInput = (By.XPATH, "//input[@id='id_password1']")
+        self.confirmPasswordInput = (By.XPATH, "//input[@id='id_password2']")
+        self.registerButton = (By.XPATH, "//button[normalize-space()='Sign Up!']")
+        self.registerTab = (By.XPATH, "//a[normalize-space()='Register']")
+        self.invalidRegistration = (By.XPATH, "//strong[normalize-space()='A user with that username already exists.']")
 
     def navigate_to_page(self):
-        self.driver.find_element_by_xpath(self.register_tab)
+        try:
+            register_tab_element = WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_element_located(self.registerTab)
+            )
+            register_tab_element.click()
+        except TimeoutException as e:
+            print(f"Exception occurred while navigating to the register page: {e}")
 
     def enter_username(self, first_name):
-        self.driver.find_element_by_xpath(self.first_name_input).send_keys(first_name)
+        try:
+            username_field = WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_element_located(self.firstNameInput)
+            )
+            username_field.send_keys(first_name)
+        except TimeoutException as e:
+            print(f"Exception occurred while entering the username: {e}")
 
     def enter_email(self, email):
-        self.driver.find_element_by_xpath(self.email_input).send_keys(email)
+        try:
+            email_field = WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_element_located(self.emailInput)
+            )
+            email_field.send_keys(email)
+        except TimeoutException as e:
+            print(f"Exception occurred while entering the email: {e}")
 
     def enter_password(self, password):
-        self.driver.find_element_by_xpath(self.password_input).send_keys(password)
+        try:
+            password_field = WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_element_located(self.passwordInput)
+            )
+            password_field.send_keys(password)
+        except TimeoutException as e:
+            print(f"Exception occurred while entering the password: {e}")
 
-    def password_confirmation(self, password):
-        self.driver.find_element_by_xpath(self.password_input_conf).send_keys(password)
+    def enter_confirm_password(self, password):
+        try:
+            confirm_password_field = WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_element_located(self.confirmPasswordInput)
+            )
+            confirm_password_field.send_keys(password)
+        except TimeoutException as e:
+            print(f"Exception occurred while entering the confirm password: {e}")
 
-    def click_register(self):
-        self.driver.find_element_by_xpath(self.register_button).click()
+    def click_register_button(self):
+        try:
+            register_button = WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_element_located(self.registerButton)
+            )
+            register_button.click()
+        except TimeoutException as e:
+            print(f"Exception occurred while clicking the register button: {e}")
 
-    def register(self, name, password, email):
-        navigate_to_page(self)
-        enter_username(self, first_name)
-        enter_email(self, email)
-        enter_password(self, password)
-        password_confirmation(self, password)
-        click_register(self)
+    def is_invalid_registration_message_displayed(self):
+        try:
+            invalid_registration_element = WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_element_located(self.invalidRegistration)
+            )
+            return invalid_registration_element.is_displayed()
+        except TimeoutException:
+            return False
+
+    def register(self):
+        self.navigate_to_page()
+        self.enter_username("Alex")
+        self.enter_email("jjj@hotmail.com")
+        self.enter_password("Smmill@@@")
+        self.enter_confirm_password("Smmill@@@")
+        self.click_register_button()
 
     def valid_register(self):
-        NewRegister.register(self, NEW_USER, NEW_PASSWORD, EMAIL)
+        self.register()
+
+    def invalid_user(self):
+        self.valid_register()
+        try:
+            invalid_reg = driver.find_element(self.invalidRegistration)
+            if invalid_reg.is_displayed():
+                print(invalid_reg.text)
+        except Exception as e:
+            print(f"Exception occurred while checking invalid registration: {e}")

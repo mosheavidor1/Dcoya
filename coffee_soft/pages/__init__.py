@@ -1,9 +1,9 @@
 from .login_page import LoginPage
-from ..tests.test_register import RegisterLogin
+from .new_register import NewRegisterPage
 
 __all__ = [
     "LoginPage",
-    "RegisterLogin",
+    "NewRegisterPage"
 
 ]
 
