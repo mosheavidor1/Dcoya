@@ -7,3 +7,7 @@ INVALID_PASSWORD = "Smile2008@"
 NEW_USER = "James"
 NEW_PASSWORD = "Sm22241@"
 EMAIL = "ab@hotmail.com"
+
+EDIT_USER = "abcd"
+EDIT_EMAIL = "xxx"
+
