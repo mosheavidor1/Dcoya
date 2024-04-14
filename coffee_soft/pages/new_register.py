@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import TimeoutException
 from typing import Optional
+from coffee_soft.utils.users.user_credentials import NEW_USER, NEW_PASSWORD, EMAIL
 
 
 class NewRegisterPage:
@@ -83,10 +84,10 @@ class NewRegisterPage:
 
     def register(self):
         self.navigate_to_page()
-        self.enter_username("Alex")
-        self.enter_email("jjj@hotmail.com")
-        self.enter_password("Smmill@@@")
-        self.enter_confirm_password("Smmill@@@")
+        self.enter_username(NEW_USER)
+        self.enter_email(EMAIL)
+        self.enter_password(NEW_PASSWORD)
+        self.enter_confirm_password(NEW_PASSWORD)
         self.click_register_button()
 
     def valid_register(self):
@@ -95,7 +96,7 @@ class NewRegisterPage:
     def invalid_user(self):
         self.valid_register()
         try:
-            invalid_reg = driver.find_element(self.invalidRegistration)
+            invalid_reg = self.driver.find_element(*self.invalidRegistration)
             if invalid_reg.is_displayed():
                 print(invalid_reg.text)
         except Exception as e:
