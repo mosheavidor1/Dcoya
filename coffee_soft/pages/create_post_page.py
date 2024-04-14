@@ -14,6 +14,7 @@ class CreatePostPage:
         self.SET_TITLE = (By.XPATH, "//input[@id='id_title']")
         self.SET_CONTENT = (By.XPATH, "//textarea[@id='id_content']")
         self.SUBMIT_POST = (By.XPATH, "//button[normalize-space()='Post!']")
+        self.TITLE_VERIFIED = (By.XPATH, "//h2[@class='article-title']")
         self.DELETE_POST = (By.XPATH, "//a[normalize-space()='Delete Post']")
         self.APPROVE_DELETE = (By.CSS_SELECTOR, "button[type='submit']")
 
@@ -51,6 +52,12 @@ class CreatePostPage:
         )
         submit_button.click()
 
+    def test_article_title(self):
+        article_title = WebDriverWait(self.driver, self.timeout).until(
+            EC.visibility_of_element_located(self.TITLE_VERIFIED)
+        )
+        print(f"Article title text: {article_title.text}")
+
     def delete_post(self):
         delete_post_link = WebDriverWait(self.driver, self.timeout).until(
             EC.visibility_of_element_located(self.DELETE_POST)
@@ -66,4 +73,5 @@ class CreatePostPage:
         self.set_title(title)
         self.set_content(content)
         self.submit_post()
+        self.test_article_title()
         self.delete_post()
